@@ -10,7 +10,7 @@ inputs:
     default: metadata.yaml
   image-name-key-path:
     description: 'YAML path to key for image name'
-    deafult: ["image_name"]
+    deafult: "["image_name"]"
   github-token:
     description: 'GITHUB_TOKEN for access'
     required: true
@@ -26,7 +26,7 @@ runs:
       uses: jbutcher5/read-yaml@1.6
       with:
         file: ${{ inputs.metadata-file }}
-        key-path: '${{ inputs.image-name-key-path }}'
+        key-path: ${{ inputs.image-name-key-path }}
 
     - name: Create tags
       id: meta
