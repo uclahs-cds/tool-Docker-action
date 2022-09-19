@@ -26,7 +26,7 @@ runs:
       run: |
         echo $MYVAR
       env:
-        MYVAR: ${{ inputs.image-name-key-path }}
+        MYVAR: ${{ inputs.registry }}
 
     - name: Read YAML
       id: yaml-data
