@@ -25,8 +25,8 @@ runs:
       id: yaml-data
       uses: jbutcher5/read-yaml@1.6
       with:
-        file: ${ inputs.metadata-file }
-        key-path: ${ inputs.image-name-key-path }
+        file: ${{ inputs.metadata-file }}
+        key-path: ${{ inputs.image-name-key-path }}
 
     - name: Create tags
       id: meta
