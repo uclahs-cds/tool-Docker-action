@@ -14,6 +14,9 @@ inputs:
   github-token:
     description: 'GITHUB_TOKEN for access'
     required: true
+  custom-tags:
+    description: 'Custom tags'
+    default: ''
 
 runs:
   using: "composite"
@@ -38,6 +41,7 @@ runs:
         tags: |
           type=raw,enable=${{github.event_name == 'push'}},value=dev,event=branch
           type=match,pattern=v(.*),group=1
+          ${{ inputs.custom-tags }}
 
     - name: Log in to the Container registry
       uses: docker/login-action@v1
