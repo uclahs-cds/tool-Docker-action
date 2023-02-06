@@ -23,6 +23,8 @@ runs:
   steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
     - name: Read YAML
       id: yaml-data
