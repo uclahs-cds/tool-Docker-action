@@ -11,3 +11,4 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 - Action for automatic Docker image build and push
 - Custom tag option
+- Add `context` argument to allow for Dockerfiles in subfolders
