@@ -10,7 +10,7 @@ inputs:
     default: metadata.yaml
   image-name-key-path:
     description: 'YAML path to key for image name'
-    default: '["image_name"]'
+    default: '.image_name'
   github-token:
     description: 'GITHUB_TOKEN for access'
     required: true
@@ -31,10 +31,9 @@ runs:
 
     - name: Read YAML
       id: yaml-data
-      uses: jbutcher5/read-yaml@1.6
+      uses: mikefarah/yq@v4
       with:
-        file: ${{ inputs.metadata-file }}
-        key-path: ${{ inputs.image-name-key-path }}
+        cmd: yq '${{ inputs.metadata-file }}' '${{ inputs.metadata-file }}'
 
     - name: Create tags
       id: meta
@@ -42,7 +41,7 @@ runs:
       with:
         flavor: |
           latest=false
-        images: ${{ inputs.registry }}/${{ steps.yaml-data.outputs.data }}
+        images: ${{ inputs.registry }}/${{ steps.yaml-data.outputs.result }}
         tags: |
           type=raw,enable=${{github.event_name == 'push'}},value=dev,event=branch
           type=match,pattern=v(.*),group=1
