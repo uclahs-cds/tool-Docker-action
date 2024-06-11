@@ -13,7 +13,7 @@ inputs:
     default: '.image_name'
   github-token:
     description: 'GITHUB_TOKEN for access'
-    required: true
+    default: ${{ github.token }}
   custom-tags:
     description: 'Custom tags'
     default: ''
