@@ -33,7 +33,7 @@ runs:
       id: yaml-data
       uses: mikefarah/yq@v4
       with:
-        cmd: yq '${{ inputs.metadata-file }}' '${{ inputs.metadata-file }}'
+        cmd: yq '${{ inputs.image-name-key-path }}' '${{ inputs.metadata-file }}'
 
     - name: Create tags
       id: meta
