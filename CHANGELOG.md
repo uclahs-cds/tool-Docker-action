@@ -8,7 +8,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ---
 
 ## [Unreleased]
+
 ### Added
 - Action for automatic Docker image build and push
 - Custom tag option
 - Add `context` argument to allow for Dockerfiles in subfolders
+
+### Changed
+- Unpack `build-release` folder
+- Replace `jbutcher5/read-yaml` with `mikefarah/yq` for YAML parsing
+- Use `${github.token}` as default value for `github-token`.
