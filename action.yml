@@ -44,7 +44,7 @@ runs:
       with:
         script: |
           const script = require(`${process.env['GITHUB_ACTION_PATH']}/delete-tags.js`)
-          await script({github, context})
+          await script({ github, context, core })
 
     # Take this path if the event is not a deletion
     - name: Create tags

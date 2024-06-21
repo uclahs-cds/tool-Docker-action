@@ -1,4 +1,4 @@
-module.exports = async ({ github, context }) => {
+module.exports = async ({ github, context, core }) => {
   const { IMAGE_NAME } = process.env
   const tagName = `branch-${context.payload.ref}`
 
@@ -11,8 +11,14 @@ module.exports = async ({ github, context }) => {
       org: context.payload.organization.login
     })) {
     for (const version of response.data) {
-      if (version.metadata?.container?.tags?.includes?.(tagName)) {
-        console.log(`Package version ${version.html_url} matches tag ${tagName}`)
+      const tags = version.metadata?.container?.tags
+      if (tags?.includes(tagName)) {
+        core.notice(`Package version ${version.html_url} matches tag ${tagName} and will be deleted`)
+
+        const otherTags = tags.filter((tag) => tag !== tagName)
+        if (otherTags.length) {
+          core.warning(`Image version has other tags that will be lost: ${otherTags}`)
+        }
 
         await github.rest.packages.deletePackageVersionForOrg({
           package_type: 'container',
@@ -31,6 +37,6 @@ module.exports = async ({ github, context }) => {
   }
 
   if (!didDelete) {
-    console.log(`Failed to find tag named ${tagName}`)
+    core.warning(`Did not find version tagged ${tagName}`)
   }
 }
