@@ -41,7 +41,7 @@ runs:
       uses: actions/github-script@v7
       with:
         script: |
-          const script = require("${GITHUB_ACTION_PATH}/delete-tags.js')
+          const script = require("${GITHUB_ACTION_PATH}/delete-tags.js")
           console.log(script({github, context}))
 
     # Take this path if the event is a push
