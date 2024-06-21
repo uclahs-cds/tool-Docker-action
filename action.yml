@@ -56,8 +56,8 @@ runs:
           latest=false
         images: ${{ inputs.registry }}/${{ steps.yaml-data.outputs.result }}
         tags: |
-          type=ref,prefix=branch-,event=branch
-          type=ref,suffix=-branch,event=branch
+          type=raw,enable={{ github.ref == 'refs/heads/main' }},value=dev
+          type=ref,enable={{ github.ref != 'refs/heads/main' }},prefix=branch-,event=branch
           type=semver,pattern={{version}}
           ${{ inputs.custom-tags }}
 
