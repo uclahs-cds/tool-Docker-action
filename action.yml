@@ -57,6 +57,7 @@ runs:
         images: ${{ inputs.registry }}/${{ steps.yaml-data.outputs.result }}
         tags: |
           type=ref,prefix=branch-,event=branch
+          type=ref,suffix=-branch,event=branch
           type=semver,pattern={{version}}
           ${{ inputs.custom-tags }}
 
