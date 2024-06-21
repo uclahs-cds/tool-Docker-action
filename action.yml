@@ -35,17 +35,16 @@ runs:
       with:
         cmd: yq '${{ inputs.image-name-key-path }}' '${{ inputs.metadata-file }}'
 
-    # Take this path if the event is a deletion
-    - if: github.event_name == 'delete'
+    # Take this path if the event is a branch deletion
+    - if: github.event_name == 'delete' && github.event.ref_type == 'branch'
       name: Delete matching docker tags
       uses: actions/github-script@v7
       with:
         script: |
-          const actionpath = process.env['GITHUB_ACTION_PATH']
-          const script = require(`${actionpath}/delete-tags.js`)
-          console.log(script({github, context}))
+          const script = require(`${process.env['GITHUB_ACTION_PATH']}/delete-tags.js`)
+          script({github, context})
 
-    # Take this path if the event is a push
+    # Take this path if the event is not a deletion
     - name: Create tags
       if: github.event_name != 'delete'
       id: meta
