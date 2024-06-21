@@ -35,7 +35,18 @@ runs:
       with:
         cmd: yq '${{ inputs.image-name-key-path }}' '${{ inputs.metadata-file }}'
 
+    # Take this path if the event is a deletion
+    - if: github.event_name == 'delete'
+      name: Delete matching docker tags
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const script = require("${GITHUB_ACTION_PATH}/delete-tags.js')
+          console.log(script({github, context}))
+
+    # Take this path if the event is a push
     - name: Create tags
+      if: github.event_name != 'delete'
       id: meta
       uses: docker/metadata-action@v5
       with:
@@ -48,6 +59,7 @@ runs:
           ${{ inputs.custom-tags }}
 
     - name: Log in to the Container registry
+      if: github.event_name != 'delete'
       uses: docker/login-action@v3
       with:
         registry: ${{ inputs.registry }}
@@ -55,6 +67,7 @@ runs:
         password: ${{ inputs.github-token }}
 
     - name: Build and push Docker image
+      if: github.event_name != 'delete'
       uses: docker/build-push-action@v5
       with:
         context: ${{ inputs.context }}
