@@ -13,7 +13,14 @@ module.exports = async ({ github, context }) => {
     for (const version of response.data) {
       if (version.metadata?.container?.tags?.includes?.(tagName)) {
         console.log(`Package version ${version.html_url} matches tag ${tagName}`)
-        // FIXME Insert actual deletion call here
+
+        await github.rest.packages.deletePackageVersionForOrg({
+          package_type: 'container',
+          package_name: IMAGE_NAME,
+          org: context.payload.organization.login,
+          package_version_id: version.id
+        })
+
         didDelete = true
         break
       }
