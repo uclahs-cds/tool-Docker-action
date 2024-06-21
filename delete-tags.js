@@ -7,7 +7,15 @@ module.exports = async ({ github, context }) => {
       package_name: IMAGE_NAME,
       org: context.payload.organization.login
     })) {
-    console.log('This is a loop iteration')
-    console.log(response)
+    // let didDelete = false
+    for (const version of response.data) {
+      const tags = version.metadata?.tags
+      console.log(version.name)
+      console.log(tags)
+      // didDelete = true
+    }
+    // if (didDelete) {
+    //   break
+    // }
   }
 }
