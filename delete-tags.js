@@ -1,6 +1,13 @@
 module.exports = async ({ github, context, core }) => {
   const { IMAGE_NAME } = process.env
-  const tagName = `${context.payload.ref_type === 'branch' ? 'branch-' : ''}${context.payload.ref}`
+
+  let tagName
+
+  if (context.payload.ref_type === 'branch') {
+    tagName = `branch-${context.payload.ref}`
+  } else {
+    tagName = /^v(.*)$/.exec(context.payload.ref)[0]
+  }
 
   let didDelete = false
 
