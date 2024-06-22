@@ -6,7 +6,7 @@ module.exports = async ({ github, context, core }) => {
   if (context.payload.ref_type === 'branch') {
     tagName = `branch-${context.payload.ref}`
   } else {
-    tagName = /^v(.*)$/.exec(context.payload.ref)[0]
+    tagName = context.payload.ref.match(/^v(.*)$/)[1]
   }
 
   let didDelete = false
