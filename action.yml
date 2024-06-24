@@ -1,10 +1,9 @@
 ---
 name: 'Docker-build-release'
-description: 'Build Docker image and push to repository'
+description: 'Build Docker image and push to GHCR'
 inputs:
-  registry:
-    description: 'Registry to which image will be pushed'
-    default: ghcr.io/uclahs-cds
+  organization:
+    description: 'Organizational host for the image. Defaults to the organization of the calling repository.'
   metadata-file:
     description: 'Metadata YAML file containing information'
     default: metadata.yaml
@@ -35,11 +34,20 @@ runs:
       with:
         cmd: yq '${{ inputs.image-name-key-path }}' '${{ inputs.metadata-file }}'
 
+    - name: Parse organization
+      id: parse-org
+      shell: bash
+      env:
+        CALLING_ORGANIZATION: ${{ github.event.organization.login }}
+        INPUT_ORGANIZATION: ${{ inputs.organization }}
+      run: echo "org=${INPUT_ORGANIZATION:-$CALLING_ORGANIZATION}" >> "$GITHUB_OUTPUT"
+
     # Take this path if the event is a branch deletion
     - if: github.event_name == 'delete'
       name: Delete matching docker tags
       uses: actions/github-script@v7
       env:
+        ORGANIZATION: ${{ steps.parse-org.outputs.org }}
         IMAGE_NAME: ${{ steps.yaml-data.outputs.result }}
       with:
         script: |
@@ -54,7 +62,7 @@ runs:
       with:
         flavor: |
           latest=false
-        images: ${{ inputs.registry }}/${{ steps.yaml-data.outputs.result }}
+        images: ghcr.io/${{ steps.parse-org.outputs.org }}/${{ steps.yaml-data.outputs.result }}
         tags: |
           type=raw,enable=${{ github.ref == 'refs/heads/main' }},value=dev
           type=ref,enable=${{ github.ref != 'refs/heads/main' }},prefix=branch-,event=branch
@@ -65,7 +73,7 @@ runs:
       if: github.event_name != 'delete'
       uses: docker/login-action@v3
       with:
-        registry: ${{ inputs.registry }}
+        registry: ghcr.io/${{ steps.parse-org.outputs.org }}
         username: ${{ github.actor }}
         password: ${{ inputs.github-token }}
 
@@ -82,6 +90,7 @@ runs:
       name: Log comment with image URL
       uses: actions/github-script@v7
       env:
+        ORGANIZATION: ${{ steps.parse-org.outputs.org }}
         IMAGE_NAME: ${{ steps.yaml-data.outputs.result }}
         IMAGE_DIGEST: ${{ steps.buildpush.outputs.digest }}
       with:

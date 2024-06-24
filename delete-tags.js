@@ -1,5 +1,5 @@
 module.exports = async ({ github, context, core }) => {
-  const { IMAGE_NAME } = process.env
+  const { IMAGE_NAME, ORGANIZATION } = process.env
 
   let tagName
 
@@ -15,7 +15,7 @@ module.exports = async ({ github, context, core }) => {
     github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg, {
       package_type: 'container',
       package_name: IMAGE_NAME,
-      org: context.payload.organization.login
+      org: ORGANIZATION
     })) {
     for (const version of response.data) {
       const tags = version.metadata?.container?.tags
@@ -30,7 +30,7 @@ module.exports = async ({ github, context, core }) => {
         await github.rest.packages.deletePackageVersionForOrg({
           package_type: 'container',
           package_name: IMAGE_NAME,
-          org: context.payload.organization.login,
+          org: ORGANIZATION,
           package_version_id: version.id
         })
 
