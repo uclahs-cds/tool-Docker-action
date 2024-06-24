@@ -43,8 +43,9 @@ runs:
           latest=false
         images: ${{ inputs.registry }}/${{ steps.yaml-data.outputs.result }}
         tags: |
-          type=raw,enable=${{github.event_name == 'push'}},value=dev,event=branch
-          type=match,pattern=v(.*),group=1
+          type=raw,enable=${{ github.ref == 'refs/heads/main' }},value=dev
+          type=ref,enable=${{ github.ref != 'refs/heads/main' }},prefix=branch-,event=branch
+          type=semver,pattern={{version}}
           ${{ inputs.custom-tags }}
 
     - name: Log in to the Container registry
