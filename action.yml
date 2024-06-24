@@ -36,6 +36,7 @@ runs:
 
     - name: Parse organization
       id: parse-org
+      shell: bash
       env:
         CALLING_ORGANIZATION: github.event.organization.login
       run: echo "org=${INPUT_ORGANIZATION:-$CALLING_ORGANIZATION}" >> "$GITHUB_OUTPUT"
