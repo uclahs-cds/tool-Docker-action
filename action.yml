@@ -83,7 +83,7 @@ runs:
       uses: actions/github-script@v7
       env:
         IMAGE_NAME: ${{ steps.yaml-data.outputs.result }}
-        IMAGE_ID: ${{ steps.buildpush.outputs.imageid }}
+        IMAGE_DIGEST: ${{ steps.buildpush.outputs.digest }}
       with:
         script: |
           const script = require(`${process.env['GITHUB_ACTION_PATH']}/post-url.js`)
