@@ -39,6 +39,7 @@ runs:
       shell: bash
       env:
         CALLING_ORGANIZATION: ${{ github.event.organization.login }}
+        INPUT_ORGANIZATION: ${{ inputs.organization }}
       run: echo "org=${INPUT_ORGANIZATION:-$CALLING_ORGANIZATION}" >> "$GITHUB_OUTPUT"
 
     # Take this path if the event is a branch deletion
