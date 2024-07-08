@@ -11,6 +11,7 @@ This action will build and push images of the form `ghcr.io/<organization>/<imag
 | `main` | default branch | `dev` |
 | `mybranch` | branch | `branch-mybranch` |
 | `v1.2.3` | tag | `1.2.3` |
+
 When a git branch or tag is deleted, the corresponding docker will be deleted as well.
 
 ## Usage
@@ -62,6 +63,7 @@ The complicated `run-name` logic above controls the workflow run names listed on
 ### Inputs
 
 | Name | Default | Description |
+| ---- | ------- | ----------- |
 | `organization` | -- | The GitHub organizational host of the image. Defaults to the organization of the calling repository. |
 | `metadata-file` | `metadata.yaml` | Metadata file storing the image name. |
 | `image-name-key-path` | `.image_name` | [`yq`](https://github.com/mikefarah/yq) query for the image name within the metadata file. |
