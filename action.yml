@@ -30,7 +30,7 @@ runs:
 
     - name: Read YAML
       id: yaml-data
-      uses: mikefarah/yq@v4
+      uses: mikefarah/yq@v4.44.2
       with:
         cmd: yq '${{ inputs.image-name-key-path }}' '${{ inputs.metadata-file }}'
 
