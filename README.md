@@ -11,8 +11,13 @@ This action will build and push images of the form `ghcr.io/<organization>/<imag
 | `main` | default branch | `dev` |
 | `mybranch` | branch | `branch-mybranch` |
 | `v1.2.3` | tag | `1.2.3` |
+| `v3-beta` (requires `non-semver-tags`) | tag | `3-beta` |
 
 When a git branch or tag is deleted, the corresponding docker will be deleted as well.
+
+### Version Tag Formats
+
+By default this Action only recognizes tags in SemVer format (e.g. `v1.2.3-rc.1`). To allow non-SemVer tags (e.g. `v3-beta`), set the `non-semver-tags` input to `true`. All tags must still start with a `v` to be recognized.
 
 ## Usage
 
@@ -70,6 +75,7 @@ The complicated `run-name` logic above controls the workflow run names listed on
 | `github-token` | `github.token`  | Token used for authentication. Requires `contents: read` for the calling repository and `packages:write` for the host organization. |
 | `custom-tags` | -- | Additional lines to add to the [docker/metadata-action `tags` argument](https://github.com/docker/metadata-action?tab=readme-ov-file#tags-input). |
 | `context` | `.` | The docker build context. Only required if the `Dockerfile` is not in the repository root. |
+| `non-semver-tags` | -- | If set to a non-empty string, non-SemVer tags will be recognized. |
 
 ## License
 
