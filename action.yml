@@ -19,6 +19,9 @@ inputs:
   context:
     description: 'Docker build context'
     default: '.'
+  non-semver-tags:
+    description: 'If set to any value, build all tags beginning with v'
+    default: ''
 
 runs:
   using: "composite"
@@ -67,6 +70,7 @@ runs:
           type=raw,enable=${{ github.ref == 'refs/heads/main' }},value=dev
           type=ref,enable=${{ github.ref != 'refs/heads/main' }},prefix=branch-,event=branch
           type=semver,pattern={{version}}
+          type=match,enable=${{ inputs.non-semver-tags != '' }},pattern=v(.*),group=1
           ${{ inputs.custom-tags }}
 
     - name: Log in to the Container registry

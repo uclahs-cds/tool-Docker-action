@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Custom tag option
 - Add `context` argument to allow for Dockerfiles in subfolders
 - Delete docker versions when git branches/tags are deleted
+- Add `non-semver-tags` argument to allow building on non-semver tags
 
 ### Changed
 - Unpack `build-release` folder
