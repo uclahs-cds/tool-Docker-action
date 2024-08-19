@@ -32,6 +32,8 @@ def main():
     for key_path in key_paths:
         result = result[key_path]
 
+    print(f"::notice::Parsed image name `{result}`")
+
     with open(os.environ["GITHUB_OUTPUT"], mode="a", encoding="utf-8") as outfile:
         outfile.write(f"result={result}\n")
 
