@@ -32,11 +32,18 @@ runs:
       with:
         submodules: recursive
 
-    - name: Read YAML
-      id: yaml-data
-      uses: mikefarah/yq@v4.44.2
+    - uses: actions/setup-python@v5
       with:
-        cmd: yq '${{ inputs.image-name-key-path }}' '${{ inputs.metadata-file }}'
+        python-version: '3.10'
+
+    - id: yaml-data
+      shell: bash
+      env:
+        IMAGE_KEYPATH: ${{ inputs.image-name-key-path }}
+        METADATA_FILE: ${{ inputs.metadata-file }}
+      run: |
+        pip install PyYAML==6.0.2
+        python "$GITHUB_ACTION_PATH/parse_name.py"
 
     # Take this path if the event is a branch deletion
     - if: github.event_name == 'delete'
