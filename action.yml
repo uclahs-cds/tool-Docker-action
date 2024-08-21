@@ -1,0 +1,103 @@
+---
+name: 'Docker-build-release'
+description: 'Build Docker image and push to GHCR'
+inputs:
+  organization:
+    description: 'Organizational host for the image. Defaults to the organization of the calling repository.'
+    default: ${{ github.event.organization.login }}
+  metadata-file:
+    description: 'Metadata YAML file containing information'
+    default: metadata.yaml
+  image-name-key-path:
+    description: 'YAML path to key for image name'
+    default: '.image_name'
+  github-token:
+    description: 'GITHUB_TOKEN for access'
+    default: ${{ github.token }}
+  custom-tags:
+    description: 'Custom tags'
+    default: ''
+  context:
+    description: 'Docker build context'
+    default: '.'
+  non-semver-tags:
+    description: 'If set to any value, build all tags beginning with v'
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - id: yaml-data
+      shell: bash
+      env:
+        IMAGE_KEYPATH: ${{ inputs.image-name-key-path }}
+        METADATA_FILE: ${{ inputs.metadata-file }}
+      run: |
+        pip install PyYAML==6.0.2
+        python "$GITHUB_ACTION_PATH/parse_name.py"
+
+    # Take this path if the event is a branch deletion
+    - if: github.event_name == 'delete'
+      name: Delete matching docker tags
+      uses: actions/github-script@v7
+      env:
+        ORGANIZATION: ${{ inputs.organization }}
+        IMAGE_NAME: ${{ steps.yaml-data.outputs.result }}
+      with:
+        script: |
+          const script = require(`${process.env['GITHUB_ACTION_PATH']}/delete-tags.js`)
+          await script({ github, context, core })
+
+    # Take this path if the event is not a deletion
+    - name: Create tags
+      if: github.event_name != 'delete'
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        flavor: |
+          latest=false
+        images: ghcr.io/${{ inputs.organization }}/${{ steps.yaml-data.outputs.result }}
+        tags: |
+          type=raw,enable=${{ github.ref == 'refs/heads/main' }},value=dev
+          type=ref,enable=${{ github.ref != 'refs/heads/main' }},prefix=branch-,event=branch
+          type=semver,pattern={{version}}
+          type=match,enable=${{ inputs.non-semver-tags != '' }},pattern=v(.*),group=1
+          ${{ inputs.custom-tags }}
+
+    - name: Log in to the Container registry
+      if: github.event_name != 'delete'
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io/${{ inputs.organization }}
+        username: ${{ github.actor }}
+        password: ${{ inputs.github-token }}
+
+    - name: Build and push Docker image
+      id: buildpush
+      if: github.event_name != 'delete'
+      uses: docker/build-push-action@v5
+      with:
+        context: ${{ inputs.context }}
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+
+    - if: github.event_name != 'delete'
+      name: Log comment with image URL
+      uses: actions/github-script@v7
+      env:
+        ORGANIZATION: ${{ inputs.organization }}
+        IMAGE_NAME: ${{ steps.yaml-data.outputs.result }}
+        IMAGE_DIGEST: ${{ steps.buildpush.outputs.digest }}
+      with:
+        script: |
+          const script = require(`${process.env['GITHUB_ACTION_PATH']}/post-url.js`)
+          await script({ github, context, core })
