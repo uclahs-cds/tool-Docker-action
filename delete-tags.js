@@ -4,7 +4,7 @@ module.exports = async ({ github, context, core }) => {
   let tagName
 
   if (context.payload.ref_type === 'branch') {
-    tagName = `branch-${context.payload.ref}`
+    tagName = `branch-${context.payload.ref.replace('/', '-')}`
   } else {
     tagName = context.payload.ref.match(/^v(.*)$/)[1]
   }
