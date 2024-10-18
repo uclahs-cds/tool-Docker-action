@@ -23,3 +23,4 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Require usage of <ghcr.io>, change `registry` input to `organization`
 - Build on pushes to all branches
 - Tag non-`main` branches as `branch-<branchname>`
+- Handle `/` characters in tags when branch names contain them
