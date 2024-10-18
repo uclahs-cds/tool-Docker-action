@@ -1,5 +1,7 @@
 # Docker Build Action
 
+[![GitHub release](https://img.shields.io/github/v/release/uclahs-cds/tool-Docker-action)](https://github.com/uclahs-cds/tool-Docker-action/actions/workflows/prepare-release.yaml)
+
 An Action to automatically build and push images to the [GitHub Container registry](https://github.com/features/packages).
 
 ## Description
