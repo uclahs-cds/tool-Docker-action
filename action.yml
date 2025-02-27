@@ -87,6 +87,7 @@ runs:
     - name: Set file argument (conditionally)
       id: file_input
       if: inputs.file != ''
+      shell: bash
       run: echo "file=${{ inputs.file }}" >> "$GITHUB_OUTPUT"
 
     - name: Build and push Docker image
