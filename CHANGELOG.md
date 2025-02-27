@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2025-02-27
+
+### Added
+
+- Add optional `file` argument to pass through to docker/build-push-action
+
 ## [2.1.1] - 2024-10-18
 
 ### Added
@@ -15,7 +21,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Add `context` argument to allow for Dockerfiles in subfolders
 - Delete docker versions when git branches/tags are deleted
 - Add `non-semver-tags` argument to allow building on non-semver tags
-- Add optional `file` argument to pass through to docker/build-push-action
 
 ### Changed
 
@@ -28,3 +33,4 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Handle `/` characters in tags when branch names contain them
 
 [2.1.1]: https://github.com/uclahs-cds/tool-Docker-action/releases/tag/v2.1.1
+[2.2.0]: https://github.com/uclahs-cds/tool-Docker-action/compare/v2.1.1...v2.2.0
