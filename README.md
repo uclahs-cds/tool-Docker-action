@@ -75,6 +75,7 @@ The complicated `run-name` logic above controls the workflow run names listed on
 | `github-token` | `github.token`  | Token used for authentication. Requires `contents: read` for the calling repository and `packages:write` for the host organization. |
 | `custom-tags` | -- | Additional lines to add to the [docker/metadata-action `tags` argument](https://github.com/docker/metadata-action?tab=readme-ov-file#tags-input). |
 | `context` | `.` | The docker build context. Only required if the `Dockerfile` is not in the repository root. |
+| `file` | `''` | The Dockerfile to build. The default (empty string) is treated as `${context}/Dockerfile`. |
 | `non-semver-tags` | -- | If set to a non-empty string, non-SemVer tags will be recognized. |
 
 ## License
