@@ -51,7 +51,7 @@ runs:
     # Take this path if the event is a branch deletion
     - if: github.event_name == 'delete'
       name: Delete matching docker tags
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       env:
         ORGANIZATION: ${{ inputs.organization }}
         IMAGE_NAME: ${{ steps.yaml-data.outputs.result }}
@@ -96,7 +96,7 @@ runs:
 
     - if: github.event_name != 'delete'
       name: Log comment with image URL
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       env:
         ORGANIZATION: ${{ inputs.organization }}
         IMAGE_NAME: ${{ steps.yaml-data.outputs.result }}
